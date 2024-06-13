@@ -1,0 +1,59 @@
+from news.models import *
+
+u1 = User.objects.create_user(username='Pupa')
+u2 = User.objects.create_user(username='Lupa')
+
+a1 = Author.objects.create(user=u1)
+a2 = Author.objects.create(user=u2)
+
+cat1 = Category.objects.create(category='Кино')
+cat2 = Category.objects.create(category='Музыка')
+cat3 = Category.objects.create(category='Игры')
+cat4 = Category.objects.create(category='Книги')
+
+p1 = Post.objects.create(author=a1, type_post='AR', title='blabla', text='blablablablablabla')
+p2 = Post.objects.create(author=a1, type_post='AR', title='haha', text='hahahahahahahaha')
+p3 = Post.objects.create(author=a2, type_post='NE', title='lala', text='lalalalalalalalalala')
+
+p1.categories.add(cat1, cat3, cat4)
+p2.categories.add(cat2, cat3)
+p3.categories.add(cat1, cat4)
+
+com1 = Comment.objects.create(post_comm=p1, user_comm=a1.user, content='Wow')
+com2 = Comment.objects.create(post_comm=p1, user_comm=a2.user, content='Nice')
+com3 = Comment.objects.create(post_comm=p2, user_comm=a2.user, content='!!!!')
+com4 = Comment.objects.create(post_comm=p3, user_comm=a1.user, content='Cool')
+
+>>> p1.like()
+>>> p2.dislike()
+>>> p3.like()
+>>> com1.like()
+>>> com2.dislike()
+>>> com3.dislike()
+>>> com4.like()
+>>> p1.rating
+>>> p3.like()
+>>> com2.like()
+>>> p2.rating
+>>> p3.rating
+>>> com1.rating
+>>> com2.rating
+>>> com3.rating
+>>> com4.rating
+
+>>> a1.update_rating()
+>>> a2.update_rating()
+>>> a2.rating
+>>> a1.rating
+
+br = Author.objects.all().order_by('-rating').values('user__username', 'rating')
+br.order_by('-rating')
+
+bp = Post.objects.all().order_by('-rating').first()
+bp.date_post
+bp.author.user
+bp.rating
+bp.title
+bp.preview()
+
+bp.comment_set.all().values('date_comm', 'user_comm', 'rating', 'content')
