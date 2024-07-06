@@ -1,6 +1,9 @@
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, PermissionRequiredMixin
+)
 from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView
+    ListView, DetailView, CreateView, UpdateView, DeleteView,
 )
 from .models import Post
 from .filters import PostFilter
@@ -39,7 +42,8 @@ class PostSearch(ListView):
         return context
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -52,13 +56,16 @@ class PostCreate(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+    context_object_name = 'edit'
 
 
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list')
+    context_object_name = 'delete'
