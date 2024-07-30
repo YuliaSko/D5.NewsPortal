@@ -8,8 +8,10 @@ News
 {% endblock title %}
 
 {% block content %}
-    <h1>Все новости</h1>
-    <h5>Количество всех новостей: {{news|length}}</h5>
+    {% if is_not_subscriber %}
+        <button> <a href= "{% url 'subscribe' category.id %}"> Подписаться </a></button>
+    {% endif %}
+    <h1>Все новости в категории {{category}}</h1>
     <hr>
         <table>
             <tr>
@@ -20,7 +22,7 @@ News
                 <td><b>Публикация</b></td>
                 <td><b>Тип публикации</b></td>
             </tr>
-            {% for post in news %}
+            {% for post in category_posts_list %}
             <tr>
                 <td>{{ post.author }}</td>
                 <td>{% for categories in post.categories.all %}

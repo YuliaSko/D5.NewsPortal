@@ -1,0 +1,8 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <h1>{{author}}! К сожалению, больше 3 новостей в сутки публиковать нельзя</h1>
+    <h3>Попробуйте завтра!</h3>
+    <p>Сейчас вы можете вернуться на главную страницу</p>
+    <button><a href="/news/"> Все новости </a></button>
+{% endblock content %}
